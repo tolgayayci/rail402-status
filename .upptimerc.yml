@@ -1,31 +1,77 @@
-# Change these first
-owner: upptime # Your GitHub organization or username, where this repository lives
-repo: upptime # The name of this repository
-
+# The public status page's checks (Upptime, MIT): copy to .upptimerc.yml in the status repository. Checks
+# run from GitHub Actions every 5 minutes, outside the service's host, and are read-only: no check pays,
+# signs or writes anything. Each check asserts content, not only a status code, so a proxy error page or a
+# half-started service counts as down.
+#
+# Availability is Upptime's own figure: a failed check opens an incident issue and the next passing check
+# closes it, and a component's uptime is the share of the window not covered by its incidents. Checks run
+# every 5 minutes at best (GitHub may delay or skip scheduled runs), so an outage that starts and ends
+# between two runs is not seen, and an incident's length is known only to the run interval. The page says
+# so; it is not the internal monitoring, which scrapes every 15 seconds. Each network's readiness
+# (/ready/testnet, /ready/pubnet) is its own component: it follows that network's RPC and sponsor, so it is
+# the "degraded" signal. /health only marks a starting service as down: its top-level state aggregates both
+# networks' warnings, so it does not stand for either network.
+owner: tolgayayci
+repo: rail402-status
+user-agent: rail402-status
 sites:
-  - name: Google
-    url: https://www.google.com
-  - name: Wikipedia
-    url: https://en.wikipedia.org
-  - name: Hacker News
-    url: https://news.ycombinator.com
-  - name: Secret Site
-    url: $SECRET_SITE
-
-status-website:
-  # Add your custom domain name, or remove the `cname` line if you don't have a domain
-  # Uncomment the `baseUrl` line if you don't have a custom domain and add your repo name there
-  cname: demo.upptime.js.org
-  # baseUrl: /your-repo-name
-  logoUrl: https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/icon.svg
-  name: Upptime
-  introTitle: "**Upptime** is the open-source uptime monitor and status page, powered entirely by GitHub."
-  introMessage: This is a sample status page which uses **real-time** data from our [GitHub repository](https://github.com/upptime/upptime). No server required — just GitHub Actions, Issues, and Pages. [**Get your own for free**](https://github.com/upptime/upptime)
-  navbar:
-    - title: Status
-      href: /
-    - title: GitHub
-      href: https://github.com/$OWNER/$REPO
-
-# Upptime also supports notifications, assigning issues, and more
-# See https://upptime.js.org/docs/configuration
+  # --- testnet ---
+  - name: Testnet facilitator /supported
+    url: https://testnet.rail402.dev/supported
+    expectedStatusCodes: [200]
+    maxResponseTime: 5000
+    __dangerous__body_down_if_text_missing: '"areFeesSponsored":true'
+    tags: [testnet, facilitator]
+  - name: Testnet Bazaar /discovery/resources
+    url: https://testnet.rail402.dev/discovery/resources?limit=1
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: '"items"'
+    tags: [testnet, bazaar]
+  - name: Testnet Bazaar /discovery/search
+    url: https://testnet.rail402.dev/discovery/search?query=weather&limit=1
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: '"partialResults"'
+    tags: [testnet, bazaar]
+  - name: Testnet facilitator /health
+    url: https://testnet.rail402.dev/health
+    expectedStatusCodes: [200]
+    __dangerous__body_down: '"state":"starting"'
+    tags: [testnet, facilitator]
+  - name: Testnet readiness /ready/testnet (degraded signal)
+    url: https://testnet.rail402.dev/ready/testnet
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: '"ready":true'
+    tags: [testnet, readiness]
+  # --- other public services ---
+  - name: Demo seller
+    url: https://demo.rail402.dev/weather
+    expectedStatusCodes: [402]
+    tags: [testnet, demo]
+  - name: Playground
+    url: https://playground.rail402.dev/
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: "Rail402"
+    tags: [testnet, playground]
+  # The hosted MCP server takes JSON-RPC over POST only, and these checks never write: a GET answered with
+  # the server's own method_not_allowed error shows the MCP route is served.
+  - name: Testnet hosted MCP
+    url: https://testnet.rail402.dev/mcp/testnet
+    expectedStatusCodes: [405]
+    __dangerous__body_down_if_text_missing: '"method_not_allowed"'
+    tags: [testnet, mcp]
+  - name: Explorer
+    url: https://explorer.rail402.dev/health
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: '"status":"ok"'
+    tags: [testnet, explorer]
+  - name: Documentation
+    url: https://docs.rail402.dev/
+    expectedStatusCodes: [200]
+    tags: [docs]
+# Rail402 serves its own page from this repository's history; Upptime builds no site and leaves the
+# repository's description, topics and homepage alone. The mainnet checks are added at the mainnet launch.
+skipGeneratingWebsite: true
+skipDescriptionUpdate: true
+skipTopicsUpdate: true
+skipHomepageUpdate: true
+skipPoweredByReadme: false
