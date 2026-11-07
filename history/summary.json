@@ -184,19 +184,19 @@
     "url": "https://mainnet.rail402.dev/mcp/pubnet",
     "icon": "https://icons.duckduckgo.com/ip3/mainnet.rail402.dev.ico",
     "slug": "mainnet-hosted-mcp",
-    "status": "down",
-    "uptime": "51.29%",
-    "uptimeDay": "51.29%",
-    "uptimeWeek": "51.29%",
-    "uptimeMonth": "51.29%",
-    "uptimeYear": "51.29%",
-    "time": 112,
-    "timeDay": 112,
-    "timeWeek": 112,
-    "timeMonth": 112,
-    "timeYear": 112,
+    "status": "up",
+    "uptime": "0.14%",
+    "uptimeDay": "0.14%",
+    "uptimeWeek": "0.14%",
+    "uptimeMonth": "0.14%",
+    "uptimeYear": "0.14%",
+    "time": 108,
+    "timeDay": 108,
+    "timeWeek": 108,
+    "timeMonth": 108,
+    "timeYear": 108,
     "dailyMinutesDown": {
-      "2026-11-07": 0
+      "2026-11-07": 260
     }
   },
   {
